@@ -1,5 +1,6 @@
-import win32api, win32con, win32gui
+import win32api, win32con, win32gui, win32con
 from ctypes import windll
+# from PIL import Image
 import ctypes
 import string
 import time
@@ -320,6 +321,63 @@ class KeyboardMouseControl:
         wparam = vk_code
         lparam = (scan_code << 16) | 1
         win32gui.PostMessage(self.hwnd, self.WmCode["key_up"], wparam, lparam)
+
+
+# def screenshot_window(hwnd,position=None):
+#     """截取整个窗口，传参就是截取该区域的图片，"""
+#     # 如果使用高 DPI 显示器（或 > 100% 缩放尺寸），添加下面一行，否则注释掉
+#     # windll.user32.SetProcessDPIAware()
+
+#     left, top, right, bot = win32gui.GetClientRect(hwnd)
+#     w = right - left
+#     h = bot - top
+
+#     hwndDC = win32gui.GetWindowDC(hwnd)
+#     # 根据窗口句柄获取窗口的设备上下文DC（Divice Context）
+#     mfcDC = win32ui.CreateDCFromHandle(hwndDC)  # 根据窗口的DC获取mfcDC
+#     saveDC = mfcDC.CreateCompatibleDC()  # mfcDC创建可兼容的DC
+
+#     saveBitMap = win32ui.CreateBitmap()  # 创建bitmap准备保存图片
+#     saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)  # 为bitmap开辟空间
+
+#     saveDC.SelectObject(saveBitMap)  # 高度saveDC，将截图保存到saveBitmap中
+
+#     # 选择合适的 window number，如0，1，2，3，直到截图从黑色变为正常画面
+#     result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 3)
+#     # 从位图对象中保存图像
+#     bmpinfo = saveBitMap.GetInfo()
+#     bmpstr = saveBitMap.GetBitmapBits(True)
+
+#     img = Image.frombuffer(
+#         "RGB",
+#         (bmpinfo["bmWidth"], bmpinfo["bmHeight"]),
+#         bmpstr,
+#         "raw",
+#         "BGRX",
+#         0,
+#         1,
+#     )
+#     # 释放资源
+#     win32gui.DeleteObject(saveBitMap.GetHandle())
+#     saveDC.DeleteDC()
+#     mfcDC.DeleteDC()
+#     win32gui.ReleaseDC(hwnd, hwndDC)
+
+#     if result == 1:
+#         # print(position)
+#         # 如果有坐标就截取坐标
+#         if position:
+#             img = img.crop(position)
+#         # img.show()
+#         # 定义图片路径
+#         # img_path = os.path.join(
+#         #     os.environ.get("TEMP"), get_datetime().replace(":", "_") + ".png"
+#         # )
+#         # 保存图片并返回
+#         # img.save()
+#         return img
+#     else:
+#         print("未能截取窗口")
 
 
 # if __name__ == '__main__':

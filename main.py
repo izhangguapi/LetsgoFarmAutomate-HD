@@ -1,5 +1,8 @@
 import win32gui, win32api, win32con, win32com.client
-from tools import KeyboardMouseControl  # 用于获取用户输入
+# from paddleocr import PaddleOCR
+# import numpy as np
+# import paddle
+import tools
 import ctypes
 import time
 import os
@@ -88,8 +91,8 @@ def disable_minimize_button():
     """禁用窗口的最小化按钮"""
     # 2. 获取当前窗口样式
     style = win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE)
-    # 3. 禁用最小化按钮（移除 WS_MINIMIZEBOX）
-    new_style = style & ~win32con.WS_MINIMIZEBOX
+    # 3. 禁用最小化和最大化按钮（移除 WS_MINIMIZEBOX）
+    new_style = style & ~win32con.WS_MINIMIZEBOX & ~win32con.WS_MAXIMIZEBOX
     # 4. 应用新样式
     win32gui.SetWindowLong(hwnd, win32con.GWL_STYLE, new_style)
     # 5. 刷新窗口（可选）
@@ -105,6 +108,38 @@ def disable_minimize_button():
         | win32con.SWP_NOZORDER
         | win32con.SWP_FRAMECHANGED,
     )
+
+
+# def checkServerConnection():
+#     """检查服务器连接状态"""
+#     client_width, client_height = get_game_size()
+#     image = tools.screenshot_window(
+#         hwnd,
+#         (
+#             int(client_width * 0.525),
+#             int(client_height * 0.6),
+#             int(client_width * 0.675),
+#             int(client_height * 0.675),
+#         ),
+#     )
+#     # image.show()
+
+#     device = "gpu" if paddle.is_compiled_with_cuda() else "cpu"
+#     # 初始化 PaddleOCR 实例
+#     ocr = PaddleOCR(
+#         lang="ch",
+#         use_doc_orientation_classify=False,
+#         use_doc_unwarping=False,
+#         use_textline_orientation=False,
+#         device=device,  # 如果有 GPU 可用，改为 "gpu"
+#     )
+
+#     # 对示例图像执行 OCR 推理
+#     result = ocr.predict(np.array(image))
+#     if result[0]["rec_texts"][0] == "继续尝试":
+#         return True
+#     else:
+#         return False
 
 
 if __name__ == "__main__":
@@ -135,7 +170,7 @@ if __name__ == "__main__":
     size, offset_x, offset_y = is_16_9()
     print(f"游戏窗口大小：{size}, 偏移量：{offset_x}, {offset_y}")
     # 初始化输入处理类
-    kmc = KeyboardMouseControl(hwnd, size, offset_x, offset_y)
+    kmc = tools.KeyboardMouseControl(hwnd, size, offset_x, offset_y)
 
     # 激活游戏窗口
     time.sleep(1)
@@ -149,6 +184,11 @@ if __name__ == "__main__":
     print("开始执行")
     while True:
         start_time = time.time()
+
+        # 检查服务器连接状态
+        # if checkServerConnection():
+        kmc.mouse_move_click(0.63, 0.65)
+        time.sleep(3)
         # ==================== 循环体开始 ====================
         # 在这里编写你的核心业务逻辑代码
 

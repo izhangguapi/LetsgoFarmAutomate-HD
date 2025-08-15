@@ -3,4 +3,7 @@ __pycache__/
 main.build/
 main.dist/
 *.zip
-*test*.py
+test/
+.venv/
+pyproject.toml
+uv.lock
